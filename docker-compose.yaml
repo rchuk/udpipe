@@ -1,0 +1,18 @@
+name: udpipe
+services:
+  udpipe:
+    build:
+      context: .
+    ports:
+      - "8001:8001"
+    volumes:
+      - "./models:/models:ro"
+    environment:
+      UDPIPE_PORT: 8001
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [ gpu ]

@@ -11,6 +11,7 @@
 
 import argparse
 import contextlib
+import datetime
 import email.parser
 import http.server
 import itertools
@@ -385,7 +386,6 @@ class UDServer(socketserver.ThreadingTCPServer):
     def server_bind(self):
         import socket
         self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEPORT, 1)
         super().server_bind()
 
     def service_actions(self):
@@ -395,7 +395,6 @@ class UDServer(socketserver.ThreadingTCPServer):
 
 
 if __name__ == "__main__":
-    import signal
     import threading
 
     # Parse server arguments
@@ -438,8 +437,12 @@ if __name__ == "__main__":
     print("To stop it gracefully, either send SIGINT (Ctrl+C) or SIGUSR1.", file=sys.stderr, flush=True)
 
     # Wait until the server should be closed
-    signal.pthread_sigmask(signal.SIG_BLOCK, [signal.SIGINT, signal.SIGUSR1])
-    signal.sigwait([signal.SIGINT, signal.SIGUSR1])
+    try:
+        while True:
+            time.sleep(datetime.timedelta.max.seconds)
+    except KeyboardInterrupt:
+        pass
+
     print("Initiating shutdown of the UDPipe 2 server.", file=sys.stderr, flush=True)
     server.shutdown()
     print("Stopped handling new requests, processing all current ones.", file=sys.stderr, flush=True)
