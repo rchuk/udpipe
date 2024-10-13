@@ -1,4 +1,4 @@
-tensorflow>=2.12.0 # Note that for just inference, you can use TF 2.* too.
+tensorflow[and-cuda]>=2.12.0 # Note that for just inference, you can use TF 2.* too.
 ufal.chu_liu_edmonds
 ufal.udpipe>=1.3,<2
 markupsafe==2.0.1
